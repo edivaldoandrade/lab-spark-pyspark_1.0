@@ -1,9 +1,6 @@
 # lab-spark-pyspark_1.0
 
+docker-compose up
 
-Criar o server Apache Spark - Ambiente
-	- Anaconda
-	- Mobaxterm (ou nao)
-	- Apache Spark Pre-built for hadoop
-	- Java
-	
+docker exec -it spark-container /bin/bash
+pyspark

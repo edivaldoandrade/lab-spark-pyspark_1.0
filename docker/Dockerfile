@@ -23,8 +23,16 @@ RUN wget https://archive.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK
 # Instalando bibliotecas Python necessárias
 RUN pip install pyspark==3.5.0 pandas numpy
 
+# Instalando Jupyter
+RUN pip install jupyterlab
+
+# Expondo a porta do Jupyter
+EXPOSE 8888
+
+
 # Expondo portas
-EXPOSE 4040 8080 7077
+EXPOSE 4040 9080 7077 8888
 
 # Entrando no shell do Spark por padrão
-CMD ["/bin/bash"]
+# CMD ["/bin/bash", "jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
