@@ -8,7 +8,10 @@ ENV SPARK_HOME=/opt/spark
 ENV PATH=$SPARK_HOME/bin:$SPARK_HOME/sbin:$PATH
 ENV PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH
 ENV PYSPARK_PYTHON=python3
-ENV PYSPARK_DRIVER_PYTHON=python3
+# ENV PYSPARK_DRIVER_PYTHON=python3
+ENV PYSPARK_DRIVER_PYTHON=jupyter
+ENV PYSPARK_DRIVER_PYTHON_OPTS="lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root"
+
 
 # Instalando dependências
 RUN apt-get update && apt-get install -y curl wget tar python3 python3-pip && \
@@ -24,15 +27,17 @@ RUN wget https://archive.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK
 RUN pip install pyspark==3.5.0 pandas numpy
 
 # Instalando Jupyter
-RUN pip install jupyterlab
-
-# Expondo a porta do Jupyter
-EXPOSE 8888
-
+# RUN pip install jupyterlab
+RUN pip install jupyterlab ipykernel && \
+    python3 -m ipykernel install --user --name pyspark --display-name "Python (PySpark)"
 
 # Expondo portas
-EXPOSE 4040 9080 7077 8888
+# EXPOSE 4040 9080 7077 8888
+EXPOSE 4040 7077 8888
 
 # Entrando no shell do Spark por padrão
 # CMD ["/bin/bash", "jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
-CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+# CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+
+# Entrando no Jupyter com o kernel PySpark configurado
+CMD ["pyspark"]
